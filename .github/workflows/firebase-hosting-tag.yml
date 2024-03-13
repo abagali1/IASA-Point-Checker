@@ -1,0 +1,11 @@
+name: Deploy to Firebase Hosting on deploy tag 
+'on':
+  push:
+    tags:
+      - 'deploy-*'
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx firebase-tools@13.4.1 deploy --token '${{ secrets.FIREBASE_TOKEN }}'
