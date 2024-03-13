@@ -17,3 +17,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_IASABS }}'
           channelId: live
           projectId: iasabs
+      - run: npx firebase-tools@latest deploy
