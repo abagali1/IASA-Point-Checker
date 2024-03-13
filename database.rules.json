@@ -1,7 +1,7 @@
 {
   "rules": {
     ".write": false,
-    // ".read": true,
+    ".read": true,
     "choreos": {
       "$uniqname": {
         ".read": "auth.token.email.contains($uniqname)",
