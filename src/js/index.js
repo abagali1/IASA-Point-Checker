@@ -32,11 +32,13 @@ function setError(e){
 function umichRequired(){
     hideWrappers();
     document.getElementById("umichWrapper").style.display = '';
+    document.getElementById("loginWrapper").style.display = ''
 }
 
 function memberNotFound(){
     hideWrappers();
     document.getElementById("notFoundWrapper").style.display = '';
+    document.getElementById("loginWrapper").style.display = ''
 }
 
 function setLoading(){
