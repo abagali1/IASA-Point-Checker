@@ -50,6 +50,7 @@ function setLoading(){
 function populateDancerPoints(dancers){
     const table = document.getElementById("dancerPoints");
     table.style.display = '';
+    table.innerHTML = "<tr><th>Dancer Name (uniqname)</th><th>IASA Points (current/needed)</th></tr>"
     document.getElementById("dancerHeader").style.display = '';
 
     for(let uniqname in dancers){
@@ -72,6 +73,7 @@ function populateDancerPoints(dancers){
 
 function populateEventsTable(memberData){
     const table = document.getElementById("eventsTable");
+    table.innerHTML = "";
     table.style.display = '';
     document.getElementById('eventsHeader').style.display = '';
 
