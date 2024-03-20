@@ -4,7 +4,7 @@ const danceRegex = /:?\sMagic #\d+/;
 
 function getFirebaseUrl(jsonPath) {
   return (
-    'https://iasabs-default-rtdb.firebaseio.com/' +
+    'https://iasa-point-checker-default-rtdb.firebaseio.com/' +
     jsonPath +
     '.json?auth=' +
     secret

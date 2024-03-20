@@ -1,12 +1,11 @@
 'use strict';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDAPvG4Jm4erdBqMRSZ-Z_-libF38U_jEw",
-//   authDomain: "iasabs.firebaseapp.com",
-  authDomain: "points.michiganiasa.com",
-  projectId: "iasabs",
-  appId: "1:889007233830:web:25864097e9e29a66af3fe7"
-};
+    apiKey: "AIzaSyBs5C4cP1lRjyF6naWcnP2NUUNmQTFzG7g",
+    authDomain: "points.michiganiasa.com",
+    projectId: "iasa-point-checker",
+    appId: "1:423497471980:web:1c841323170e75fecc52c9"
+  };
 
 firebase.initializeApp(firebaseConfig);
 
