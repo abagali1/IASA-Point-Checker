@@ -8,4 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Auto Minify
+        uses: nizarmah/auto-minify@v2.1
+        with:
+          overwrite: true
+          directory: "src/js"
       - run: npx firebase-tools@13.4.1 deploy --token '${{ secrets.FIREBASE_TOKEN }}'
