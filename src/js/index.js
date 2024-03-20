@@ -135,9 +135,9 @@ function reset(){
     document.getElementById("loginWrapper").style.display = "";
 }
 
-async function fetchData(user, uniqnameOverride){
+async function fetchData(user){
     setLoading();
-    const uniqname = uniqnameOverride ?? user.email.replace("@umich.edu", '');
+    const uniqname = user.email.replace("@umich.edu", '');
 
     const memberRef = db.ref(`/members/${uniqname}`);
     const choreoRef = db.ref(`/choreos/${uniqname}`);
@@ -193,11 +193,3 @@ async function signin(){
 
 
 document.getElementById("login").addEventListener("click", signin)
-
-const choice = new URLSearchParams(window.location.search).get("choice");
-
-if(choice === "Member"){
-    fetchData(null, "ysinha");
-}else if(choice == "Choreo"){
-    fetchData(null, "kodei");
-}
