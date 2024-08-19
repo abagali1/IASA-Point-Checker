@@ -12,6 +12,8 @@ firebase.initializeApp(firebaseConfig);
 const provider = new firebase.auth.GoogleAuthProvider(); 
 const db = firebase.database();
 
+// const IASA_SZN_START = new Date("2024-09-05T10:00:00+08:00"); // 10AM on 09/05/2024
+
 function hideWrappers(){
     document.getElementById("umichWrapper").style.display = "none";
     document.getElementById("notFoundWrapper").style.display = "none";
@@ -190,5 +192,32 @@ async function signin(){
     });
 }
 
+var timerInterval;
+function timer(){
+    let distance = IASA_SZN_START - (new Date().getTime());
 
-document.getElementById("login").addEventListener("click", signin)
+    if (distance <= 0) {
+        return setTimeout(() => location.reload(), 0);
+    }
+
+    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML = days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+}
+
+window.onload = () => {
+    document.getElementById("login").addEventListener("click", signin);
+    if(Date.now() < IASA_SZN_START){
+        document.getElementById("login").style.display = "none";
+
+        timer();
+        timerInterval = setInterval(() => {
+            timer();
+        }, 1000);
+    }else{
+        document.getElementById("countdownWrapper").style.display = "none";
+    }
+}
