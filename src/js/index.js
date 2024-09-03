@@ -12,7 +12,7 @@ firebase.initializeApp(firebaseConfig);
 const provider = new firebase.auth.GoogleAuthProvider(); 
 const db = firebase.database();
 
-const IASA_SZN_START = new Date("2024-09-05T10:00:00+08:00"); // 10AM on 09/05/2024
+const IASA_SZN_START = new Date("2024-09-06T10:00:00+08:00"); // 10AM on 09/06/2024
 
 function hideWrappers(){
     document.getElementById("umichWrapper").style.display = "none";
