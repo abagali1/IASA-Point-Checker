@@ -1,5 +1,8 @@
 'use strict';
 
+const BOARD_EMAIL = "iasaboard24@umich.edu";
+const IASA_SZN_START = new Date("2024-09-10T10:00:00+08:00"); // 10AM on 09/10/2024
+
 const firebaseConfig = {
     apiKey: "AIzaSyBs5C4cP1lRjyF6naWcnP2NUUNmQTFzG7g",
     authDomain: "points.michiganiasa.com",
@@ -11,8 +14,6 @@ firebase.initializeApp(firebaseConfig);
 
 const provider = new firebase.auth.GoogleAuthProvider(); 
 const db = firebase.database();
-
-const IASA_SZN_START = new Date("2024-09-06T10:00:00+08:00"); // 10AM on 09/06/2024
 
 function hideWrappers(){
     document.getElementById("umichWrapper").style.display = "none";
@@ -33,13 +34,13 @@ function setError(e){
 function umichRequired(){
     hideWrappers();
     document.getElementById("umichWrapper").style.display = '';
-    document.getElementById("loginWrapper").style.display = ''
+    document.getElementById("loginWrapper").style.display = '';
 }
 
 function memberNotFound(){
     hideWrappers();
     document.getElementById("notFoundWrapper").style.display = '';
-    document.getElementById("loginWrapper").style.display = ''
+    document.getElementById("loginWrapper").style.display = '';
 }
 
 function setLoading(){
@@ -127,7 +128,7 @@ function setChoreoData(memberData, danceName, dancers){
     document.getElementById("pointsWrapper").style.display = "flex"; 
 
     populateEventsTable(memberData);
-    populateDancerPoints(dancers)
+    populateDancerPoints(dancers);
 }
 
 function reset(){
@@ -165,7 +166,7 @@ async function fetchData(user){
         }
 
         if(isLiaison)
-            return setTimeout(() => setLiaisonData(user, danceName, dancers.val()), 0)
+            return setTimeout(() => setLiaisonData(user, danceName, dancers.val()), 0);
         return setTimeout(() => setChoreoData(memberSnapshot.val(), danceName, dancers.val()));            
     }
     if(isMember){
@@ -210,6 +211,8 @@ function timer(){
 
 window.onload = () => {
     document.getElementById("login").addEventListener("click", signin);
+    document.getElementById("helpEmail").textContent = BOARD_EMAIL;
+    document.getElementById("helpEmail").href = "mailto:" + BOARD_EMAIL;
 
     if(Date.now() < IASA_SZN_START){
         document.getElementById("login").style.display = "none";
