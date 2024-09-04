@@ -1,5 +1,8 @@
 'use strict';
 
+const BOARD_EMAIL = "iasaboard24@umich.edu";
+const IASA_SZN_START = new Date("2024-09-10T10:00:00+08:00"); // 10AM on 09/10/2024
+
 const firebaseConfig = {
     apiKey: "AIzaSyBs5C4cP1lRjyF6naWcnP2NUUNmQTFzG7g",
     authDomain: "points.michiganiasa.com",
@@ -11,8 +14,6 @@ firebase.initializeApp(firebaseConfig);
 
 const provider = new firebase.auth.GoogleAuthProvider(); 
 const db = firebase.database();
-
-const IASA_SZN_START = new Date("2024-09-06T10:00:00+08:00"); // 10AM on 09/06/2024
 
 function hideWrappers(){
     document.getElementById("umichWrapper").style.display = "none";
@@ -33,13 +34,13 @@ function setError(e){
 function umichRequired(){
     hideWrappers();
     document.getElementById("umichWrapper").style.display = '';
-    document.getElementById("loginWrapper").style.display = ''
+    document.getElementById("loginWrapper").style.display = '';
 }
 
 function memberNotFound(){
     hideWrappers();
     document.getElementById("notFoundWrapper").style.display = '';
-    document.getElementById("loginWrapper").style.display = ''
+    document.getElementById("loginWrapper").style.display = '';
 }
 
 function setLoading(){
@@ -56,13 +57,13 @@ function populateDancerPoints(dancers){
 
     for(let uniqname in dancers){
         const row = table.insertRow();
-        
+
         const dancer = dancers[uniqname];
         if(dancer.currentPoints != "NULL"){
             row.insertCell(0).innerHTML = `${dancer.firstName} ${dancer.lastName} (${uniqname})`;
 
             const enoughPoints = parseInt(dancer.currentPoints) >= parseInt(dancer.requiredPoints)
-            
+
             if(enoughPoints){
                 row.insertCell(1).innerHTML = `<p class="text-green-600">${dancer.currentPoints}/${dancer.requiredPoints}</p>`; 
             }else{
@@ -103,11 +104,11 @@ function setMemberData(memberData){
 
 function setLiaisonData(user, danceName, dancers){
     hideWrappers();
-    
+
     document.getElementById("name").innerText = user.displayName;
-    
+
     document.getElementById("dancerHeader").innerText = danceName + " Dancers";
-   
+
     document.getElementById("points").style.display = "none";
     document.getElementById("pointsWrapper").style.display = "flex"; 
 
@@ -122,12 +123,12 @@ function setChoreoData(memberData, danceName, dancers){
     document.getElementById("dancerHeader").innerText = danceName + " Dancers";
 
     document.querySelector("p#points span").innerText = memberData.points;
-   
+
     document.getElementById("points").style.display = "inline";
     document.getElementById("pointsWrapper").style.display = "flex"; 
 
     populateEventsTable(memberData);
-    populateDancerPoints(dancers)
+    populateDancerPoints(dancers);
 }
 
 function reset(){
@@ -149,14 +150,14 @@ async function fetchData(user){
     }catch(e){
         return setTimeout(() => setError(e), 0);
     }
-    
+
     const isMember = memberSnapshot.exists();
     const isChoreo = choreoSnapshot.exists();
     const isLiaison = !isMember && isChoreo;
-    
+
     if(isChoreo){
         const danceName = choreoSnapshot.val();
-        
+
         let dancers;
         try{
             dancers = await db.ref(`/dancers/${danceName}`).get();
@@ -165,13 +166,14 @@ async function fetchData(user){
         }
 
         if(isLiaison)
-            return setTimeout(() => setLiaisonData(user, danceName, dancers.val()), 0)
-        return setTimeout(() => setChoreoData(memberSnapshot.val(), danceName, dancers.val()));            
+            return setTimeout(() => setLiaisonData(user, danceName, dancers.val()), 0);
+        return setTimeout(() => setChoreoData(memberSnapshot.val(), danceName, dancers.val()));
     }
     if(isMember){
         return setTimeout(() => setMemberData(memberSnapshot.val()), 0);
     }
     return setTimeout(memberNotFound, 0);
+    // ALWAYS call DOM update action in a setTimeout( () => {..}, 0) block for stable DOM state transitions. Read: https://stackoverflow.com/a/779785
 }
 
 async function signin(){
@@ -185,7 +187,7 @@ async function signin(){
         if(!user.email.includes("umich.edu")){
             return setTimeout(umichRequired, 0);
         } 
-        
+
         await fetchData(user);
     }).catch((error) => {
         setError(error);
@@ -210,11 +212,13 @@ function timer(){
 
 window.onload = () => {
     document.getElementById("login").addEventListener("click", signin);
+    document.getElementById("helpEmail").textContent = BOARD_EMAIL;
+    document.getElementById("helpEmail").href = "mailto:" + BOARD_EMAIL;
 
     if(Date.now() < IASA_SZN_START){
         document.getElementById("login").style.display = "none";
 
-        timer();
+        timer(); // Start timer immediately and update every 1000 ms (1s)
         timerInterval = setInterval(() => {
             timer();
         }, 1000);
