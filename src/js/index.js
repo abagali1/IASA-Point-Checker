@@ -177,21 +177,7 @@ async function fetchData(user){
 }
 
 async function signin(){
-    reset();
-
-    firebase.auth()
-    .signInWithPopup(provider)
-    .then(async (result) => {
-        const user = result.user;
-
-        if(!user.email.includes("umich.edu")){
-            return setTimeout(umichRequired, 0);
-        } 
-
-        await fetchData(user);
-    }).catch((error) => {
-        setError(error);
-    });
+    window.location.href = "https://youtu.be/dQw4w9WgXcQ?si=PhJnAr8tLagHLvic";
 }
 
 var timerInterval;
