@@ -22,6 +22,7 @@ function hideWrappers(){
     document.getElementById("loadingWrapper").style.display = "none";
     document.getElementById("pointsWrapper").style.display = "none";
     document.getElementById("loginWrapper").style.display = "none"
+    document.getElementById("enablePopupWrapper").style.display = "none";
 }
 
 function setError(e){
@@ -46,6 +47,12 @@ function memberNotFound(){
 function setLoading(){
     hideWrappers();
     document.getElementById("loadingWrapper").style.display = '';
+}
+
+function enablePopups(){
+    hideWrappers();
+    document.getElementById("enablePopupWrapper").style.display = '';
+    document.getElementById("loginWrapper").style.display = '';
 }
 
 
@@ -190,7 +197,11 @@ async function signin(){
 
         await fetchData(user);
     }).catch((error) => {
-        setError(error);
+        if(error.code == "auth/popup-blocked"){
+            return setTimeout(enablePopups, 0);
+        }else{
+            return setTimeout(() => setError(e), 0);
+        }
     });
 }
 
