@@ -1,7 +1,7 @@
 'use strict';
 
 const BOARD_EMAIL = "iasaboard24@umich.edu";
-const IASA_SZN_START = new Date("2024-09-16T10:00:00+08:00"); // 10AM on 09/16/2024
+const IASA_SZN_START = new Date("2024-09-10T10:00:00+08:00"); // 10AM on 09/16/2024
 
 const firebaseConfig = {
     apiKey: "AIzaSyBs5C4cP1lRjyF6naWcnP2NUUNmQTFzG7g",

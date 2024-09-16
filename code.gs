@@ -1,6 +1,4 @@
 const secret = PropertiesService.getScriptProperties().getProperty('firebaseSecret');
-const danceRegex = /:?\sMagic #\d+/;
-
 
 function getFirebaseUrl(jsonPath) {
   return (
@@ -15,7 +13,7 @@ function syncDb(excelData, root) {
   const options = {
     method: 'put',
     contentType: 'application/json',
-    payload: JSON.stringify(excelData)
+    payload: JSON.stringify(excelData),
   };
   const fireBaseUrl = getFirebaseUrl(root);
 
@@ -24,7 +22,7 @@ function syncDb(excelData, root) {
 
 function syncDancers(){
   let ss = SpreadsheetApp.getActiveSpreadsheet();
-  const danceSheetName = "IASA Dance Roster";
+  const danceSheetName = "Dancer Points";
   let danceSheet = ss.getSheetByName(danceSheetName);
 
   const dataSr = 2;
@@ -38,31 +36,32 @@ function syncDancers(){
   let dancers = {};
   let choreos = {};
   for(let i=0;i < sourceLen;i++){
-    if(sheetData[i][1] !== ''){
+    if(sheetData[i][0][0] === '#'){
+      dance = sheetData[i][0].slice(3);
+    }
+    if(dance !== '' && sheetData[i][0] !== 'First Name'){
       let data = {};
 
-      if(sheetData[i][0] !== ''){
-        dance = sheetData[i][0].replace(danceRegex, '');
-      }
+      let uniqname = sheetData[i][2].toLowerCase();
 
-      let uniqname = sheetData[i][3].toLowerCase();
+      if(uniqname){
+        data.firstName = sheetData[i][0];
+        data.lastName = sheetData[i][1];
+        data.requiredPoints = sheetData[i][7];
+        data.currentPoints = sheetData[i][6] == '' ? 0 : sheetData[i][6];
 
-      data.firstName = sheetData[i][1];
-      data.lastName = sheetData[i][2];
-      data.requiredPoints = sheetData[i][9];
-      data.currentPoints = sheetData[i][10]
+        if(!(dance in dancers)){
+          dancers[dance] = {};
+        }
 
-      if(!(dance in dancers)){
-        dancers[dance] = {};
-      }
-      dancers[dance][uniqname] = data;
+        dancers[dance][uniqname] = data;
 
-      if(styleData[i][1] === 'bold'){
-        choreos[uniqname] = dance;
+        if(styleData[i][1] === 'bold'){
+          choreos[uniqname] = dance;
+        }
       }
     }
   }
-
   syncDb(dancers, 'dancers');
   syncDb(choreos, 'choreos');
 }
@@ -79,8 +78,8 @@ function syncMembers(){
   const sourceLen = sheetData.length;
 
 
-  const eventStr = 10;
-  const numEvents = 13;
+  const eventStr = 11;
+  const numEvents = 18;
   const events = danceSheet.getRange(1, eventStr, 1, numEvents).getValues()[0];
 
 
@@ -96,7 +95,9 @@ function syncMembers(){
 
       data.events = [];
       for(let j=0;j < numEvents;j++){
-        data.events.push(Object.fromEntries([[ events[j], sheetData[i][j + eventStr - 1] ]]))
+        if(!events[j].includes("Rehersal")){
+          data.events.push(Object.fromEntries([[ events[j], sheetData[i][j + eventStr - 1] ]]))
+        }
       }
       members[uniqname] = data;
     }
