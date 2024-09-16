@@ -27,7 +27,15 @@
     <body>
         <div class="bg-gradient h-screen flex flex-col items-center gap-y-6 px-8 text-center text-black my-10">
             <h1 class="text-5xl font-bold flex items-center content-center">IASA Point Checker</h1>
-            
+
+            <noscript>
+                <div>
+                    <h3 style="color: red;">
+                        JavaScript is required to use the point checker
+                    </h3>
+                </div>
+            </noscript>
+
             <div id="umichWrapper" style="display: none;" class="bg-red-300 rounded-lg py-2 px-4">
                 <h3>
                     You must log in with an @umich.edu Google account
@@ -43,7 +51,7 @@
 
             <div id="enablePopupWrapper" style="display: none;" class="bg-red-300 rounded-lg py-2 px-4">
                 <h3>
-                    Please enable popups to use the point checker
+                    Please <a>enable popups</a>enable popups to use the point checker
                 </h3>
             </div>
 

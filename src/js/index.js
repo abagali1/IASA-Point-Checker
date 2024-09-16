@@ -15,6 +15,22 @@ firebase.initializeApp(firebaseConfig);
 const provider = new firebase.auth.GoogleAuthProvider(); 
 const db = firebase.database();
 
+// https://prathapreddy-mudium.medium.com/how-to-detect-a-clients-browser-name-using-javascript-fd0cab66f9ab
+function popupHelpLink() {
+    var userAgent = navigator.userAgent;
+    if (userAgent.indexOf("Edg") > -1) {
+        return "https://support.microsoft.com/en-us/microsoft-edge/block-pop-ups-in-microsoft-edge-1d8ba4f8-f385-9a0b-e944-aa47339b6bb5#ID0EDH";
+    } else if (userAgent.indexOf("Chrome") > -1) {
+        return "https://support.google.com/chrome/answer/95472?hl=en&co=GENIE.Platform%3DDesktop#zippy=%2Callow-pop-ups-and-redirects-from-a-site";
+    } else if (userAgent.indexOf("Firefox") > -1) {
+        return "https://support.mozilla.org/en-US/kb/pop-blocker-settings-exceptions-troubleshooting";
+    } else if (userAgent.indexOf("Safari") > -1) {
+        return "https://www.idownloadblog.com/2021/03/30/how-to-allow-pop-ups-in-safari/";
+    }
+
+    return null;
+}
+
 function hideWrappers(){
     document.getElementById("umichWrapper").style.display = "none";
     document.getElementById("notFoundWrapper").style.display = "none";
@@ -51,6 +67,12 @@ function setLoading(){
 
 function enablePopups(){
     hideWrappers();
+
+    let helpUrl = popupHelpLink();
+    document.querySelector("#enablePopupWrapper h3").innerHTML = helpUrl ? 
+        `Please <a href="${helpUrl}" class="underline text-blue-600" target="_blank">enable popups</a> to use the point checker` :
+        "Please enable popups to use the point checker";
+
     document.getElementById("enablePopupWrapper").style.display = '';
     document.getElementById("loginWrapper").style.display = '';
 }
