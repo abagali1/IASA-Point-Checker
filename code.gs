@@ -78,7 +78,7 @@ function syncMembers(){
   const sourceLen = sheetData.length;
 
 
-  const eventStr = 11;
+  const eventStr = 12;
   const numEvents = 18;
   const events = danceSheet.getRange(1, eventStr, 1, numEvents).getValues()[0];
 
