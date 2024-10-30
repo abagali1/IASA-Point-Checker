@@ -78,11 +78,17 @@ function enablePopups(){
 }
 
 
-function populateDancerPoints(dancers){
-    const table = document.getElementById("dancerPoints");
+function populateDancerPoints(danceName, dancers){
+    const template = document.getElementsByTagName("template")[0];
+    const clone = template.content.cloneNode(true);
+
+
+    const table = clone.getElementById("dancerPoints");
     table.style.display = '';
     table.innerHTML = "<tr><th>Dancer Name (uniqname)</th><th>IASA Points (current/needed)</th></tr>"
-    document.getElementById("dancerHeader").style.display = '';
+
+    clone.getElementById("dancerHeader").innerText = danceName + " Dancers";
+    clone.getElementById("dancerHeader").style.display = '';
 
     for(let uniqname in dancers){
         const row = table.insertRow();
@@ -100,6 +106,8 @@ function populateDancerPoints(dancers){
             }
         }
     }
+
+    document.getElementById("pointsWrapper").insertBefore(clone, document.getElementById("helpMessage"));
 }
 
 function populateEventsTable(memberData){
@@ -131,25 +139,22 @@ function setMemberData(memberData){
     populateEventsTable(memberData);
 }
 
-function setLiaisonData(user, danceName, dancers){
+function setLiaisonData(user, danceNames, dancers){
     hideWrappers();
 
     document.getElementById("name").innerText = user.displayName;
 
-    document.getElementById("dancerHeader").innerText = danceName + " Dancers";
-
     document.getElementById("points").style.display = "none";
     document.getElementById("pointsWrapper").style.display = "flex"; 
 
-    populateDancerPoints(dancers);
+    for(let i=0;i<danceNames.length;i++)
+        populateDancerPoints(danceNames[i], dancers[i]);
 }
 
-function setChoreoData(memberData, danceName, dancers){
+function setChoreoData(memberData, danceNames, dancers){
     hideWrappers();
 
     document.getElementById("name").innerText = memberData.firstName + " " + memberData.lastName;
-
-    document.getElementById("dancerHeader").innerText = danceName + " Dancers";
 
     document.querySelector("p#points span").innerText = memberData.points;
 
@@ -157,7 +162,9 @@ function setChoreoData(memberData, danceName, dancers){
     document.getElementById("pointsWrapper").style.display = "flex"; 
 
     populateEventsTable(memberData);
-    populateDancerPoints(dancers);
+
+    for(let i=0;i<danceNames.length;i++)
+        populateDancerPoints(danceNames[i], dancers[i]);
 }
 
 function reset(){
@@ -185,23 +192,21 @@ async function fetchData(user){
     const isLiaison = !isMember && isChoreo;
 
     if(isChoreo){
-        const allDanceNames = choreoSnapshot.val();
-        const isPres = Object.keys(allDanceNames).length > 1;
+        const allDanceNames = Object.keys(choreoSnapshot.val());
+        const allDancers = []
 
-        if(isPres){
-        }
-
-        const danceName = Object.keys(allDanceNames)[0]
-        let dancers;
-        try{
-            dancers = await db.ref(`/dancers/${danceName}`).get();
-        }catch(e){
-            return setTimeout(() => setError(e), 0);
+        for(let i=0;i<allDanceNames.length;i++){
+            try{
+                const dancers = await db.ref(`/dancers/${allDanceNames[i]}`).get();
+                allDancers.push(dancers.val());
+            }catch(e){
+                return setTimeout(() => setError(e), 0);
+            }
         }
 
         if(isLiaison)
-            return setTimeout(() => setLiaisonData(user, danceName, dancers.val()), 0);
-        return setTimeout(() => setChoreoData(memberSnapshot.val(), danceName, dancers.val()));
+            return setTimeout(() => setLiaisonData(user, allDanceNames, allDancers), 0);
+        return setTimeout(() => setChoreoData(memberSnapshot.val(), allDanceNames, allDancers));
     }
     if(isMember){
         return setTimeout(() => setMemberData(memberSnapshot.val()), 0);
