@@ -1,6 +1,6 @@
 const secret = PropertiesService.getScriptProperties().getProperty('firebaseSecret');
 const DROPPED_COLOR = "#666666";
-const PRES = "abagali";
+const PRES = "yrpatel";
 
 function getFirebaseUrl(jsonPath) {
   return (
@@ -70,7 +70,6 @@ function syncDancers(){
     choreos[PRES][dance] = 1;
   })
 
-  console.log(choreos[PRES]);
   syncDb(dancers, 'dancers');
   syncDb(choreos, 'choreos');
 }

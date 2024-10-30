@@ -189,7 +189,6 @@ async function fetchData(user){
         const isPres = Object.keys(allDanceNames).length > 1;
 
         if(isPres){
-            alert("go away " + user.displayName);
         }
 
         const danceName = Object.keys(allDanceNames)[0]
