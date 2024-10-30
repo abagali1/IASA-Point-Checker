@@ -185,8 +185,14 @@ async function fetchData(user){
     const isLiaison = !isMember && isChoreo;
 
     if(isChoreo){
-        const danceName = choreoSnapshot.val();
+        const allDanceNames = choreoSnapshot.val();
+        const isPres = Object.keys(allDanceNames).length > 1;
 
+        if(isPres){
+            alert("go away " + user.displayName);
+        }
+
+        const danceName = Object.keys(allDanceNames)[0]
         let dancers;
         try{
             dancers = await db.ref(`/dancers/${danceName}`).get();
