@@ -8,7 +8,7 @@
     },
     "dancers": {
       "$dance": {
-        ".read": "auth !== null && root.child('choreos').child(auth.token.email.replace('@umich.edu', '')).val() == $dance"
+        ".read": "auth !== null && root.child('choreos').child(auth.token.email.replace('@umich.edu', '')).child($dance).exists()"
       }
     },
     "members": {
