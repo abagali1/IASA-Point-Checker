@@ -1,4 +1,6 @@
 const secret = PropertiesService.getScriptProperties().getProperty('firebaseSecret');
+const DROPPED_COLOR = "#666666";
+const PRES = "abagali";
 
 function getFirebaseUrl(jsonPath) {
   return (
@@ -30,6 +32,7 @@ function syncDancers(){
 
   const sheetData = sheetRange.getValues();
   const styleData = sheetRange.getFontWeights();
+  const backgroundData = sheetRange.getBackgrounds();
   const sourceLen = sheetData.length;
 
   let dance = '';
@@ -39,7 +42,7 @@ function syncDancers(){
     if(sheetData[i][0][0] === '#'){
       dance = sheetData[i][0].slice(3);
     }
-    if(dance !== '' && sheetData[i][0] !== 'First Name'){
+    if(dance !== '' && sheetData[i][0] !== 'First Name' && backgroundData[i][0] != DROPPED_COLOR){
       let data = {};
 
       let uniqname = sheetData[i][2].toLowerCase();
@@ -57,11 +60,17 @@ function syncDancers(){
         dancers[dance][uniqname] = data;
 
         if(styleData[i][1] === 'bold'){
-          choreos[uniqname] = dance;
+          choreos[uniqname] = {[dance]: 1};
         }
       }
     }
   }
+  choreos[PRES] = {};
+  Object.keys(dancers).forEach(dance => {
+    choreos[PRES][dance] = 1;
+  })
+
+  console.log(choreos[PRES]);
   syncDb(dancers, 'dancers');
   syncDb(choreos, 'choreos');
 }
